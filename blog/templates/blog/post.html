@@ -1,0 +1,142 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block content %}
+		
+			<style>
+					.post_banner{
+						width: 100%;
+    					height: 50%;
+					}
+					.comment {
+						margin: 20px 0px 20px 20px;
+					}
+					.profile-img{
+						height: 40px;
+					}
+					.single-blog p{
+						margin-top: 0px;
+					}
+					.blog-area p{
+						margin-bottom: 0px;
+					}
+			</style>
+			<!-- Start blog Area -->
+			<section class="blog-area section-gap">
+				<div class="container">
+					<div class="row justify-content-center">
+						<div class="col-md-8 pb-30 header-text">
+							<h1>{{post.title}}</h1>
+							
+						</div>
+					</div>
+						<div class="row">
+							
+								<div class="single-blog col-lg-10 col-md-10">
+									{% if post.img %}
+									<img class="f-img img-fluid mx-auto post_banner" src="{{post.img.url}}" alt="">
+									{% endif %}
+									
+									<p>
+										{{post.content | capfirst}}
+									</p>
+
+									<!-- post informations -->
+
+									<div class="bottom d-flex justify-content-between align-items-center flex-wrap">
+										<div>
+											<a href="{% url 'accounts:profile' post.profile.slug %}">
+												<img class="img-fluid profile-img" src="{{post.profile.img.url}}" >
+												<span>{{post.profile.user.username}}</span>
+											</a>
+										</div>
+										<div class="meta">
+											{{post.creation_date| date}}
+											{% if request.user == post.profile.user %}
+											
+											<a href="{% url 'blog:edit' post.slug %}" title="edit your post" >
+												<button type="button" class="btn btn-primary" href="" >edit</button>
+											</a> 
+											<a href="{% url 'blog:delete' post.slug %}" title="delte this post" >
+												<button type="button" class="btn btn-danger" href="" >delete</button>
+											</a> 
+
+											{% endif %}
+										</div>
+
+									</div>
+										<!-- Add Comment -->
+										<div class="card my-4" id='comments' >
+											<h5 class="card-header">Leave a Comment:</h5>
+											<div class="card-body">
+												<form method="post"  >
+												{% csrf_token %}
+												<div class="form-group">
+													<textarea class="form-control" name="comment"  rows="3"></textarea>
+												</div>
+												<button type="submit" class="btn btn-primary">Submit</button>
+												</form>
+											</div>
+										</div>
+
+										<!-- Comments -->
+										{% for comment in post.comments.all %}
+										<hr>
+											{% if comment %}
+												<div class="media mb-4" >
+													<img class="d-flex mr-3 rounded-circle profile-img" src="{{post.profile.img.url}}" >
+													<div class="media-body">
+														<strong>{{ comment.profile }}</strong>
+														<div class="d-flex  justify-content-between  flex-wrap">
+														<p>{{ comment.text }}</p>
+														
+														{{ comment.created_date| date }}
+														</div>
+													</div>
+												</div> 
+												
+											{% endif %}
+											{% empty %}
+												<p>No comments here yet :(</p>
+												<hr>
+										{% endfor %}
+								</div>
+					   </div>
+			  </div>
+			</section>>
+			<!-- end blog Area -->
+{% endblock %}
+{% comment %} 
+{% block javascript %}
+<script>
+$(document).ready(function(){
+    var $myForm = $('.my-ajax-form')
+    $myForm.submit(function(event){
+        event.preventDefault()
+        var $formData = $(this).serialize()
+        var $thisURL = $myForm.attr('data-url') || window.location.href // or set your own url
+        $.ajax({
+            method: "POST",
+            url: $thisURL,
+            data: $formData,
+            success: handleFormSuccess,
+            error: handleFormError,
+        })
+    })
+
+    function handleFormSuccess(data, textStatus, jqXHR){
+        console.log(data.message)
+        console.log(textStatus)
+        console.log(jqXHR)
+        $myForm[0].reset(); // reset form data
+    }
+
+    function handleFormError(jqXHR, textStatus, errorThrown){
+        console.log(jqXHR)
+        console.log(textStatus)
+        console.log(errorThrown)
+    }
+})
+
+</script>
+{% endblock javascript %} {% endcomment %}

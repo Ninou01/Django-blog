@@ -1,0 +1,52 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+{% load socialaccount %}
+{% block content %}
+
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<style>
+
+</style>
+            <div class="modal-content">
+                <div class="modal-body" style="margin-top: 31px;">
+                    <center>
+                    <img src="{{profile.img.url}}" name="aboutme" width="140" height="140" border="0" class="img-circle"></a>
+                    {% if profile.user.username %}<h3 class="media-heading"><strong>{{profile.user.username}}</strong>  </h3>{% endif %}
+                    {% if profile.user.first_name or profile.user.last_name  %}<h3 class="media-heading"> <small><strong>full name:</strong> {{profile.user.first_name}} {{profile.user.last_name}}</small></h3>{% endif %} 
+                    {% if profile.user.email %}<h3 class="media-heading"> <small><strong>email:</strong> {{profile.user.email}}</small></h3>{% endif %}
+                    <h3 class="media-heading"> <small><strong>joined at:</strong> {{profile.created_at| date:"" }}</small></h3>
+                    <hr>
+                    {% if profile.bio %}
+                    <center>
+                    <p class="text-left"><strong>Bio: </strong><br>
+                        {{profile.bio}}</p>
+                    {% endif %}
+                    <br>
+                    </center>
+                    {% if request.user == profile.user %}
+
+                        <a href="{% url 'accounts:edit_profile' profile.slug %}">
+                            <button type="button" class="btn btn-success" data-dismiss="modal">edit profile </button>
+                        </a>
+
+                        {% get_social_accounts user as accounts %}
+
+                        {% if not accounts %} {% comment %} if the user has not logged in using his facebook or gmail {% endcomment %}
+                            <a href="{% url 'accounts:change_password' profile.slug %}">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">change password </button>
+                            </a> 
+                        {% endif %}
+
+                    {% endif %}
+                </div>
+                <div class="modal-footer">
+                    <center>
+                        <a href="{% url 'blog:user_posts' profile.slug %}">
+                            <button type="button" class="btn btn-warning" data-dismiss="modal">all posts of {{profile.user}}</button>
+                        </a>
+                    </center>
+                </div>
+            </div>
+{% endblock %}

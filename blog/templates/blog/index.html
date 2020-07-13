@@ -1,0 +1,53 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block content %}
+		
+
+			<!-- Start blog Area -->
+			<section class="blog-area section-gap">
+				<div class="container">
+					<div class="row justify-content-center">
+						<div class="col-md-8 pb-30 header-text">
+							<h1>Our Recent Blogs</h1>
+							<p>
+								Create , Update And Share Your Posts
+							</p>
+						</div>
+					</div>
+						<div class="row">
+							{% for post in posts %}
+								{% if post.public %}
+									<div class="single-blog col-lg-4 col-md-4">
+										{% if post.img %}
+										<img class="f-img img-fluid mx-auto" src="{{post.img.url}}" alt="">
+										{% else %}
+										<img class="f-img img-fluid mx-auto" src="{% static "home-static/img/no-image.jpg" %}" style="height: 400px;">
+										{% endif %}
+										<h4>
+											<a href="{% url 'blog:post' post.slug %}">{{post.title}}</a>
+										</h4>
+										<p>
+											{{post.content |truncatewords:15}}
+										</p>
+										<div class="bottom d-flex justify-content-between align-items-center flex-wrap">
+											<div>
+												<a href="{% url 'accounts:profile' post.profile.slug %}">
+												<img class="img-fluid" src="{{post.profile.img.url}}" style="height: 40px;">
+												<span>{{post.profile.user.username}}</span>
+												</a>
+											</div>
+											<div class="meta">
+												{{post.creation_date| date}}
+												<a href="{% url 'blog:post' post.slug %}#comments"><span class="lnr lnr-bubble"></span>{{ post.comments.count }}</a>
+											</div>
+										</div>
+									</div>
+								{% endif %}
+							{% endfor %}
+						</div>
+				</div>
+			</section>
+			
+			<!-- end blog Area -->
+{% endblock %}
