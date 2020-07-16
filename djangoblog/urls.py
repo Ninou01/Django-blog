@@ -20,7 +20,7 @@ from django.conf import settings
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
-    path('super-secret-url/admin/', admin.site.urls),
+    path('admin/', admin.site.urls),
     path('', include('blog.urls')),
     path('accounts/', include('accounts.urls')),
     path('accounts/', include('allauth.urls')),

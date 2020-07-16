@@ -38,7 +38,7 @@
 									{% endif %}
 									
 									<p>
-										{{post.content | capfirst}}
+										{{post.content | capfirst | safe}}
 									</p>
 
 									<!-- post informations -->
@@ -72,7 +72,7 @@
 												<form method="post"  >
 												{% csrf_token %}
 												<div class="form-group">
-													<textarea class="form-control" name="comment"  rows="3"></textarea>
+													<textarea class="form-control" name="comment"  rows="3" style="resize:none"></textarea>
 												</div>
 												<button type="submit" class="btn btn-primary">Submit</button>
 												</form>
@@ -80,11 +80,11 @@
 										</div>
 
 										<!-- Comments -->
-										{% for comment in post.comments.all %}
+										{% for comment in comments %}
 										<hr>
 											{% if comment %}
 												<div class="media mb-4" >
-													<img class="d-flex mr-3 rounded-circle profile-img" src="{{post.profile.img.url}}" >
+													<img class="d-flex mr-3 rounded-circle profile-img" src="{{comment.profile.img.url}}" >
 													<div class="media-body">
 														<strong>{{ comment.profile }}</strong>
 														<div class="d-flex  justify-content-between  flex-wrap">
@@ -106,37 +106,3 @@
 			</section>>
 			<!-- end blog Area -->
 {% endblock %}
-{% comment %} 
-{% block javascript %}
-<script>
-$(document).ready(function(){
-    var $myForm = $('.my-ajax-form')
-    $myForm.submit(function(event){
-        event.preventDefault()
-        var $formData = $(this).serialize()
-        var $thisURL = $myForm.attr('data-url') || window.location.href // or set your own url
-        $.ajax({
-            method: "POST",
-            url: $thisURL,
-            data: $formData,
-            success: handleFormSuccess,
-            error: handleFormError,
-        })
-    })
-
-    function handleFormSuccess(data, textStatus, jqXHR){
-        console.log(data.message)
-        console.log(textStatus)
-        console.log(jqXHR)
-        $myForm[0].reset(); // reset form data
-    }
-
-    function handleFormError(jqXHR, textStatus, errorThrown){
-        console.log(jqXHR)
-        console.log(textStatus)
-        console.log(errorThrown)
-    }
-})
-
-</script>
-{% endblock javascript %} {% endcomment %}

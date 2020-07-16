@@ -19,6 +19,7 @@ def home(request):
 
 def post(request, slug):
     post = get_object_or_404(Post, slug=slug)
+    comments = Comment.objects.filter(post=post)
     if request.method == "POST":
         comment_text = request.POST['comment']
         if request.user.is_authenticated:
@@ -31,6 +32,7 @@ def post(request, slug):
             return redirect('/accounts/login/')
     context = {
         'post':post,
+        'comments':comments,
     }
     return render(request, 'blog/post.html', context)
 
@@ -38,7 +40,7 @@ def post(request, slug):
 @login_required(redirect_field_name='/accounts/login/')
 def create_post(request):
     if request.method == 'POST':
-        form = CreatePostForm(request.POST)
+        form = CreatePostForm(request.POST, request.FILES)
         if form.is_valid:
             newform = form.save(commit=False)
             newform.profile = Profile.objects.get(user=request.user)
@@ -57,7 +59,7 @@ def edit(request, slug):
     post=get_object_or_404(Post, slug=slug)
     if request.user == post.profile.user:
         if request.method == 'POST':
-            form = CreatePostForm(request.POST, instance=post)
+            form = CreatePostForm(request.POST, request.FILES, instance=post)
             if form.is_valid:
                 newform = form.save(commit=False)
                 newform.profile = Profile.objects.get(user=request.user)
@@ -90,30 +92,6 @@ def delete(request, slug):
         return redirect('/')
     else:
         return redirect('/')
-
-
-# def add_comment_to_post(request, slug):
-#     post = get_object_or_404(Post, slug=slug)
-#     profile = Profile.objects.get(user=request.user)
-#     if request.method == "POST":
-#         form = CommentForm(request.POST)
-#         if request.user.is_authenticated:
-#             if form.is_valid():
-#                 comment = form.save(commit=False)
-#                 comment.post = post
-#                 comment.profile = profile
-#                 comment.save()
-#                 return redirect('/post/%s'% slug)
-#         else:
-#             return redirect('/accounts/login/')        
-#     else:
-#         form = CommentForm()
-#     context = {
-#         'form': form
-#         }
-#     return render(request, 'blog/add_comment_to_post.html', context)
-
-
 
 
 
