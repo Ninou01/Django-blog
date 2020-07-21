@@ -2,13 +2,15 @@ import datetime
 from django.db import models
 from accounts.models import Profile
 from django.utils.text import slugify 
+from ckeditor.fields import RichTextField
+
 
 # Create your models here.
 
 class Post(models.Model):
     profile = models.ForeignKey(Profile , on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
-    content = models.TextField(blank=True)
+    content = RichTextField()
     slug = models.SlugField(blank=True)
     creation_date = models.DateTimeField(default=datetime.datetime.now()) 
     tags = models.CharField(max_length=30, blank=True)

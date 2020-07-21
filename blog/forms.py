@@ -1,7 +1,9 @@
 from django import forms
+from ckeditor.fields import RichTextField
 from .models import Post , Comment
 
 class CreatePostForm(forms.ModelForm):
+    content = RichTextField()
     class Meta:    
         model = Post
         fields = ["title","content","tags","public","img"]
