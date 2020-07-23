@@ -18,8 +18,8 @@
                     {% if profile.user.email %}<h3 class="media-heading"> <small><strong>email:</strong> {{profile.user.email}}</small></h3>{% endif %}
                     <h3 class="media-heading"> <small><strong>joined at:</strong> {{profile.created_at| date:"" }}</small></h3>
                     <hr>
-                    {% if profile.bio %}
                     <center>
+                    {% if profile.bio %}
                     <p class="text-left"><strong>Bio: </strong><br>
                         {{profile.bio}}</p>
                     {% endif %}
