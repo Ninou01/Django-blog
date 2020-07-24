@@ -15,7 +15,7 @@ virtualenv env
 then install install the requirement packages 
 
 ```bash
-pip install -r requirement.txt
+pip install -r requirements.txt 
 ```
 
 ### Run
