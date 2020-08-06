@@ -37,7 +37,7 @@ def post(request, slug):
     return render(request, 'blog/post.html', context)
 
 
-@login_required(redirect_field_name='/accounts/login/')
+@login_required(login_url='/accounts/login/')
 def create_post(request):
     if request.method == 'POST':
         form = CreatePostForm(request.POST, request.FILES)
@@ -75,7 +75,7 @@ def edit(request, slug):
     }
     return render(request, 'blog/edit.html', context)
 
-@login_required(redirect_field_name='/accounts/login/')
+@login_required(login_url='/accounts/login/')
 def user_posts(request, slug):
     profile = Profile.objects.get(slug=slug)
     posts = Post.objects.filter(profile=profile)
